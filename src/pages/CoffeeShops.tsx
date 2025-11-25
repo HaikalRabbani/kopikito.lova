@@ -1,46 +1,55 @@
+import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import shop1Image from "@/assets/coffee-shop-1.jpg";
 import shop2Image from "@/assets/coffee-shop-2.jpg";
 import shop3Image from "@/assets/coffee-shop-3.jpg";
 import shop4Image from "@/assets/coffee-shop-4.jpg";
 
+type Shop = {
+  id: string;
+  name: string;
+  address: string;
+  description: string;
+  image_url: string;
+  map_url: string;
+};
+
+const imageMap: Record<string, string> = {
+  "coffee-shop-1.jpg": shop1Image,
+  "coffee-shop-2.jpg": shop2Image,
+  "coffee-shop-3.jpg": shop3Image,
+  "coffee-shop-4.jpg": shop4Image,
+};
+
 const CoffeeShops = () => {
-  const shops = [
-    {
-      name: "Kopi Bengkulu Corner",
-      address: "Jl. Soekarno Hatta, Bengkulu",
-      description: "Kedai lokal dengan racikan robusta khas Bengkulu.",
-      image: shop1Image,
-      mapUrl:
-        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3984.3516235!2d102.26!3d-3.79!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zM8KwNDcnMjQuMCJTIDEwMsKwMTUnMzYuMCJF!5e0!3m2!1sen!2sid!4v1234567890",
-    },
-    {
-      name: "Kito Brew",
-      address: "Jl. Veteran, Bengkulu",
-      description: "Suasana cozy dengan aroma kopi susu klasik.",
-      image: shop2Image,
-      mapUrl:
-        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3984.3516235!2d102.27!3d-3.78!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zM8KwNDYnNDguMCJTIDEwMsKwMTYnMTIuMCJF!5e0!3m2!1sen!2sid!4v1234567890",
-    },
-    {
-      name: "Ngopi di Pantai Panjang",
-      address: "Kawasan Pantai Panjang, Bengkulu",
-      description: "Ngopi sambil nikmati angin laut dan senja.",
-      image: shop3Image,
-      mapUrl:
-        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3984.3516235!2d102.25!3d-3.82!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zM8KwNDknMTIuMCJTIDEwMsKwMTUnMDAuMCJF!5e0!3m2!1sen!2sid!4v1234567890",
-    },
-    {
-      name: "Teras Kopi Nusantara",
-      address: "Jl. Basuki Rahmat, Bengkulu",
-      description:
-        "Campuran biji kopi lokal dan impor dalam satu racikan istimewa.",
-      image: shop4Image,
-      mapUrl:
-        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3984.3516235!2d102.28!3d-3.77!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zM8KwNDYnMTIuMCJTIDEwMsKwMTYnNDguMCJF!5e0!3m2!1sen!2sid!4v1234567890",
-    },
-  ];
+  const [shops, setShops] = useState<Shop[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchShops();
+  }, []);
+
+  const fetchShops = async () => {
+    const { data, error } = await supabase
+      .from("coffee_shops")
+      .select("*")
+      .order("created_at", { ascending: true });
+
+    if (!error && data) {
+      setShops(data);
+    }
+    setLoading(false);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen py-20 flex items-center justify-center">
+        <p className="text-muted-foreground">Memuat...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen py-20">
@@ -56,14 +65,14 @@ const CoffeeShops = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {shops.map((shop, index) => (
+          {shops.map((shop) => (
             <Card
-              key={index}
+              key={shop.id}
               className="group overflow-hidden hover:shadow-2xl transition-all duration-300 border-2"
             >
               <div className="aspect-video overflow-hidden">
                 <img
-                  src={shop.image}
+                  src={imageMap[shop.image_url] || shop1Image}
                   alt={shop.name}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
@@ -80,7 +89,7 @@ const CoffeeShops = () => {
 
                 <div className="aspect-video rounded-lg overflow-hidden border-2 border-border">
                   <iframe
-                    src={shop.mapUrl}
+                    src={shop.map_url}
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}

@@ -64,8 +64,11 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-primary-foreground/20 mt-8 pt-8 text-center text-primary-foreground/80">
-          <p>© 2025 Kopi Kito — Seduhan Lokal, Rasa Global.</p>
+        <div className="border-t border-primary-foreground/20 mt-8 pt-8 text-center">
+          <p className="text-primary-foreground/80">© 2025 Kopi Kito — Seduhan Lokal, Rasa Global.</p>
+          <Link to="/admin-login" className="text-primary-foreground/60 hover:text-primary-foreground/80 text-sm mt-2 inline-block transition-colors">
+            Admin
+          </Link>
         </div>
       </div>
     </footer>

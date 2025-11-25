@@ -10,6 +10,8 @@ import Categories from "./pages/Categories";
 import CoffeeShops from "./pages/CoffeeShops";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import AdminLogin from "./pages/AdminLogin";
+import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,11 +27,13 @@ const App = () => (
           <main className="flex-1">
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/kategori" element={<Categories />} />
-              <Route path="/kedai" element={<CoffeeShops />} />
-              <Route path="/tentang" element={<About />} />
-              <Route path="/kontak" element={<Contact />} />
-              <Route path="*" element={<NotFound />} />
+        <Route path="/kategori" element={<Categories />} />
+        <Route path="/kedai" element={<CoffeeShops />} />
+        <Route path="/tentang" element={<About />} />
+        <Route path="/kontak" element={<Contact />} />
+        <Route path="/admin-login" element={<AdminLogin />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
           <Footer />

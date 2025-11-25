@@ -4,11 +4,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { Mail, MapPin, Phone } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const Contact = () => {
-  const { toast } = useToast();
   const [formData, setFormData] = useState({
     nama: "",
     email: "",
@@ -20,15 +20,23 @@ const Contact = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      toast({
-        title: "Pesan Terkirim!",
-        description: "Pesan kamu berhasil dikirim! Kami akan segera menghubungi kamu.",
+    try {
+      const { error } = await supabase
+        .from("contact_messages")
+        .insert([formData]);
+
+      if (error) throw error;
+
+      toast("Pesan kamu berhasil dikirim!", {
+        description: "Kami akan segera menghubungi kamu.",
       });
+
       setFormData({ nama: "", email: "", pesan: "" });
+    } catch (error: any) {
+      toast.error(error.message || "Gagal mengirim pesan");
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
