@@ -11,6 +11,7 @@ import CoffeeShops from "./pages/CoffeeShops";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import AdminLogin from "./pages/AdminLogin";
+import AdminRegister from "./pages/AdminRegister";
 import Admin from "./pages/Admin";
 import ShopDetail from "./pages/ShopDetail";
 import CategoryShops from "./pages/CategoryShops";
@@ -36,6 +37,7 @@ const App = () => (
             <Route path="/shop/:id" element={<ShopDetail />} />
             <Route path="/category/:id" element={<CategoryShops />} />
             <Route path="/admin-login" element={<AdminLogin />} />
+            <Route path="/admin-register" element={<AdminRegister />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="*" element={<NotFound />} />
             </Routes>

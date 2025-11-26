@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -83,6 +83,12 @@ const AdminLogin = () => {
               {loading ? "Memproses..." : "Masuk"}
             </Button>
           </form>
+          <div className="mt-4 text-center text-sm">
+            Belum punya akun?{" "}
+            <Link to="/admin-register" className="text-primary hover:underline">
+              Daftar di sini
+            </Link>
+          </div>
         </CardContent>
       </Card>
     </div>
