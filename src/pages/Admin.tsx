@@ -7,6 +7,8 @@ import { toast } from "sonner";
 import CategoriesManager from "@/components/admin/CategoriesManager";
 import ShopsManager from "@/components/admin/ShopsManager";
 import MessagesViewer from "@/components/admin/MessagesViewer";
+import MenuManager from "@/components/admin/MenuManager";
+import ShopCategoriesManager from "@/components/admin/ShopCategoriesManager";
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -70,10 +72,12 @@ const Admin = () => {
         </div>
 
         <Tabs defaultValue="categories" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="categories">Kategori Kopi</TabsTrigger>
-            <TabsTrigger value="shops">Kedai Kopi</TabsTrigger>
-            <TabsTrigger value="messages">Pesan Kontak</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-5">
+            <TabsTrigger value="categories">Kategori</TabsTrigger>
+            <TabsTrigger value="shops">Kedai</TabsTrigger>
+            <TabsTrigger value="menu">Menu</TabsTrigger>
+            <TabsTrigger value="relations">Relasi</TabsTrigger>
+            <TabsTrigger value="messages">Pesan</TabsTrigger>
           </TabsList>
 
           <TabsContent value="categories">
@@ -82,6 +86,14 @@ const Admin = () => {
 
           <TabsContent value="shops">
             <ShopsManager />
+          </TabsContent>
+
+          <TabsContent value="menu">
+            <MenuManager />
+          </TabsContent>
+
+          <TabsContent value="relations">
+            <ShopCategoriesManager />
           </TabsContent>
 
           <TabsContent value="messages">

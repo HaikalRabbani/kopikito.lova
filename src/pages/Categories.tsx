@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import americanoImage from "@/assets/americano.jpg";
@@ -66,10 +67,9 @@ const Categories = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {categories.map((category) => (
-            <Card
-              key={category.id}
-              className="group overflow-hidden hover:shadow-2xl transition-all duration-300 border-2 hover:border-primary"
-            >
+            <Link key={category.id} to={`/category/${category.id}`}>
+              <Card className="group overflow-hidden hover:shadow-2xl transition-all duration-300 border-2 hover:border-primary h-full cursor-pointer">
+
               <div className="aspect-square overflow-hidden">
                 <img
                   src={imageMap[category.image_url] || americanoImage}
@@ -88,7 +88,8 @@ const Categories = () => {
                   {category.details}
                 </p>
               </CardContent>
-            </Card>
+              </Card>
+            </Link>
           ))}
         </div>
       </div>

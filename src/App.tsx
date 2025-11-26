@@ -12,6 +12,8 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import AdminLogin from "./pages/AdminLogin";
 import Admin from "./pages/Admin";
+import ShopDetail from "./pages/ShopDetail";
+import CategoryShops from "./pages/CategoryShops";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,9 +33,11 @@ const App = () => (
         <Route path="/kedai" element={<CoffeeShops />} />
         <Route path="/tentang" element={<About />} />
         <Route path="/kontak" element={<Contact />} />
-        <Route path="/admin-login" element={<AdminLogin />} />
-        <Route path="/admin" element={<Admin />} />
-        <Route path="*" element={<NotFound />} />
+            <Route path="/shop/:id" element={<ShopDetail />} />
+            <Route path="/category/:id" element={<CategoryShops />} />
+            <Route path="/admin-login" element={<AdminLogin />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
           <Footer />

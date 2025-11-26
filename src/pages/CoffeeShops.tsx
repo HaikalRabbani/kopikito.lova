@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -66,10 +67,9 @@ const CoffeeShops = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {shops.map((shop) => (
-            <Card
-              key={shop.id}
-              className="group overflow-hidden hover:shadow-2xl transition-all duration-300 border-2"
-            >
+            <Link key={shop.id} to={`/shop/${shop.id}`}>
+              <Card className="group overflow-hidden hover:shadow-2xl transition-all duration-300 border-2 hover:border-primary h-full cursor-pointer">
+
               <div className="aspect-video overflow-hidden">
                 <img
                   src={imageMap[shop.image_url] || shop1Image}
@@ -100,7 +100,8 @@ const CoffeeShops = () => {
                   />
                 </div>
               </CardContent>
-            </Card>
+              </Card>
+            </Link>
           ))}
         </div>
       </div>
