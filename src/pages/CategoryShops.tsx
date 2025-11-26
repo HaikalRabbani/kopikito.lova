@@ -5,7 +5,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Breadcrumb from "@/components/Breadcrumb";
-import americanoImage from "@/assets/americano.jpg";
+import shop1Image from "@/assets/coffee-shop-1.jpg";
+import shop2Image from "@/assets/coffee-shop-2.jpg";
+import shop3Image from "@/assets/coffee-shop-3.jpg";
+import shop4Image from "@/assets/coffee-shop-4.jpg";
 
 type Category = {
   id: string;
@@ -22,10 +25,10 @@ type Shop = {
 };
 
 const imageMap: Record<string, string> = {
-  "coffee-shop-1.jpg": require("@/assets/coffee-shop-1.jpg"),
-  "coffee-shop-2.jpg": require("@/assets/coffee-shop-2.jpg"),
-  "coffee-shop-3.jpg": require("@/assets/coffee-shop-3.jpg"),
-  "coffee-shop-4.jpg": require("@/assets/coffee-shop-4.jpg"),
+  "coffee-shop-1.jpg": shop1Image,
+  "coffee-shop-2.jpg": shop2Image,
+  "coffee-shop-3.jpg": shop3Image,
+  "coffee-shop-4.jpg": shop4Image,
 };
 
 const CategoryShops = () => {
@@ -120,9 +123,9 @@ const CategoryShops = () => {
               <Link key={shop.id} to={`/shop/${shop.id}`}>
                 <Card className="group overflow-hidden hover:shadow-2xl transition-all duration-300 border-2 hover:border-primary h-full">
                   <div className="aspect-[4/3] overflow-hidden">
-                    <img
-                      src={imageMap[shop.image_url] || americanoImage}
-                      alt={shop.name}
+                  <img
+                    src={imageMap[shop.image_url] || shop1Image}
+                    alt={shop.name}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                   </div>
