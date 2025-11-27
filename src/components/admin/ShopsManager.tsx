@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Pencil, Trash2, Plus } from "lucide-react";
+import { Pencil, Trash2, Plus, Upload, X } from "lucide-react";
 
 type Shop = {
   id: string;
@@ -28,6 +28,9 @@ const ShopsManager = () => {
     image_url: "",
     map_url: "",
   });
+  const [uploading, setUploading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string>("");
 
   useEffect(() => {
     fetchShops();
@@ -45,6 +48,61 @@ const ShopsManager = () => {
     }
 
     setShops(data || []);
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error("File harus berupa gambar");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Ukuran file maksimal 5MB");
+      return;
+    }
+
+    setSelectedFile(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewUrl(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleUpload = async () => {
+    if (!selectedFile) return;
+
+    setUploading(true);
+    try {
+      const fileExt = selectedFile.name.split('.').pop();
+      const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+      const filePath = `shops/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('coffee-images')
+        .upload(filePath, selectedFile);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('coffee-images')
+        .getPublicUrl(filePath);
+
+      setFormData({ ...formData, image_url: publicUrl });
+      toast.success("Gambar berhasil diupload");
+    } catch (error: any) {
+      toast.error(error.message || "Gagal mengupload gambar");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const clearFile = () => {
+    setSelectedFile(null);
+    setPreviewUrl("");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -118,6 +176,7 @@ const ShopsManager = () => {
       image_url: "",
       map_url: "",
     });
+    clearFile();
   };
 
   return (
@@ -164,13 +223,52 @@ const ShopsManager = () => {
                 />
               </div>
               <div>
-                <label className="text-sm font-medium mb-2 block">URL Gambar</label>
-                <Input
-                  value={formData.image_url}
-                  onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                  required
-                  placeholder="nama-file.jpg"
-                />
+                <label className="text-sm font-medium mb-2 block">Gambar</label>
+                <div className="space-y-3">
+                  {previewUrl && (
+                    <div className="relative w-full h-48 rounded-lg overflow-hidden border">
+                      <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="icon"
+                        className="absolute top-2 right-2"
+                        onClick={clearFile}
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  )}
+                  {!previewUrl && formData.image_url && (
+                    <div className="relative w-full h-48 rounded-lg overflow-hidden border">
+                      <img src={formData.image_url} alt="Current" className="w-full h-full object-cover" />
+                    </div>
+                  )}
+                  <div className="flex gap-2">
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileSelect}
+                      className="flex-1"
+                    />
+                    {selectedFile && (
+                      <Button
+                        type="button"
+                        onClick={handleUpload}
+                        disabled={uploading}
+                      >
+                        <Upload className="w-4 h-4 mr-2" />
+                        {uploading ? "Uploading..." : "Upload"}
+                      </Button>
+                    )}
+                  </div>
+                  <Input
+                    value={formData.image_url}
+                    onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                    placeholder="Atau masukkan URL gambar langsung"
+                    className="text-sm"
+                  />
+                </div>
               </div>
               <div>
                 <label className="text-sm font-medium mb-2 block">Google Maps Embed URL</label>
